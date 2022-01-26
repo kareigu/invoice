@@ -1,9 +1,16 @@
-import type { NextPage } from 'next'
+import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
-import Image from 'next/image'
-import styles from '../styles/Home.module.css'
+import { useEffect } from 'react'
+import { API_URL } from '../utils/paths'
 
-const Home: NextPage = () => {
+const Home: NextPage<IProps> = ({api}) => {
+  useEffect(() => {
+    fetch(`http://${api}`)
+      .then(res => res.json())
+      .then(json => console.info(json))
+      .catch(err => console.error(err))
+  });
+
   return (
     <div>
       <Head>
@@ -15,9 +22,24 @@ const Home: NextPage = () => {
         <h1>
           NextJS
         </h1>
+        <p>
+          { `${api}` }
+        </p>
       </div>
     </div>
   )
+}
+
+interface IProps {
+  api: string,
+}
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  return {
+    props: {
+      api: API_URL
+    }
+  }
 }
 
 export default Home
