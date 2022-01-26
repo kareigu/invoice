@@ -1,11 +1,12 @@
 #[macro_use] extern crate rocket;
 use rocket::serde::json::Json;
+use rocket::response::Redirect;
 use serde::Serialize;
 
 mod cors;
 use cors::CORS;
 
-#[derive(Serialize)]
+#[derive(Serialize, Clone)]
 struct TestData {
   id: u64,
   name: String,
@@ -22,14 +23,22 @@ impl TestData {
   }
 }
 
-#[get("/api")]
-fn index() -> Json<TestData> {
-  Json(TestData::new())
+#[get("/api?<count>")]
+fn api(count: Option<i32>) -> Json<Vec<TestData>> {
+  match count {
+    Some(c) => Json(vec![TestData::new(); c as usize]),
+    None => Json(vec![TestData::new()]),
+  }
+}
+
+#[get("/")]
+fn index() -> Redirect {
+  Redirect::to("/api")
 }
 
 #[launch]
-fn api() -> _ {
+fn server() -> _ {
   rocket::build()
-    .mount("/", routes![index])
+    .mount("/", routes![index, api])
     .attach(CORS)
 }
