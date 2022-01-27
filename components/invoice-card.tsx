@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import { IInvoice } from '../utils/types';
-import { Card, Typography } from 'antd';
+import { Button, Card, DatePicker, Input, Typography } from 'antd';
+import moment from 'moment'
 
 const { Text } = Typography;
 
@@ -9,13 +10,50 @@ interface IProps {
 }
 
 const InvoiceCard: FC<IProps> = ({invoice}) => {
+  const date = moment(invoice.date);
+
   return (
     <Card title={invoice.name}>
-      <ul>
-        <li>
-          <Text code>{ invoice.account }</Text>
-        </li>
-      </ul>
+      <Input 
+        prefix="Payee:"
+        style={{marginBottom: 10}} 
+        value={invoice.payee}
+        readOnly
+      />
+      <Input 
+        prefix="Account:" 
+        style={{marginBottom: 10}} 
+        value={invoice.account}
+        readOnly
+      />
+
+      <Input 
+        prefix="Reference number:" 
+        style={{marginBottom: 10}} 
+        value={invoice.reference}
+        readOnly
+      />
+      <Input 
+        prefix="Amount:" 
+        suffix="€" 
+        style={{marginBottom: 10}}
+        type="number"
+        value={invoice.amount}
+        readOnly
+      />
+      <Input.Group compact>
+        <Button 
+          disabled 
+          type="dashed"
+        >
+          Due date
+        </Button>
+        <DatePicker 
+          allowClear 
+          value={date}
+          disabled
+        />
+      </Input.Group>
     </Card>
   )
 }
