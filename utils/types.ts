@@ -1,6 +1,10 @@
 
 export interface IInvoice {
-  id: number,
+  id?: number,
   name: string,
+  payee: string,
   account: string,
+  reference: string,
+  amount: number,
+  date: string,
 }

@@ -2,26 +2,22 @@ import type { GetServerSideProps, NextPage } from 'next';
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { API_URL } from '../utils/paths';
+import { IInvoice } from '../utils/types';
 
 import { Layout, Space, Button, Input, Typography, Row, Col, Divider, Modal } from 'antd';
 import InvoiceCard from '../components/invoice-card';
+import AddInvoiceModal from '../components/add-invoice-modal';
 
 const { Header, Footer, Sider, Content } = Layout;
 const { Title } = Typography;
 
-interface ITestData {
-  id: number,
-  name: string,
-  account: string,
-}
-
 const Home: NextPage<IProps> = ({api}) => {
-  const [test, setTest] = useState<ITestData[]>([]);
+  const [test, setTest] = useState<IInvoice[]>([]);
   const [count, setCount] = useState(1);
   const [addModalVisible, setAddModalVisible] = useState(false);
 
   const doQuery = (count: number) => {
-    fetch(`http://${api}?count=${count}`)
+    fetch(`http://${api}/v1/invoices?count=${count}`)
       .then(res => res.json())
       .then(json => {
         console.info(json);
@@ -42,14 +38,14 @@ const Home: NextPage<IProps> = ({api}) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Layout>
-        <Header>
+        <Header style={{ position: 'fixed', zIndex: 1, width: '100%' }}>
           <Space>
             <Title style={{color: 'white'}}>
               { `Invoice - ${api}` }
             </Title>
           </Space>
         </Header>
-        <Content>
+        <Content style={{marginTop: 64}}>
           <Layout style={{marginTop: '1rem', marginLeft: '1rem', marginRight: '1rem'}}>
             <Space>
               <Input 
@@ -72,26 +68,18 @@ const Home: NextPage<IProps> = ({api}) => {
             </Space>
           </Layout>
           <Divider />
-          <div style={{marginLeft: '1rem', marginRight: '1rem'}}>
-            <Row justify="space-between">
+          <div style={{marginLeft: '1rem', marginRight: '1rem', minHeight: '100vh'}}>
+            <Row justify="space-between" gutter={[12, 12]}>
                 {
                   test.map(t => (
-                    <Col key={t.id + Math.random()} span={8}>
+                    <Col key={t.id || 0 + Math.random()} md={8} sm={16}>
                       <InvoiceCard invoice={t}/>
                     </Col>
                   ))
                 }
             </Row>
           </div>
-          <Modal 
-            title="Add new invoice" 
-            visible={addModalVisible}
-            onCancel={() => setAddModalVisible(false)}
-          >
-              <Title>
-                Huutista
-              </Title>
-          </Modal>
+          <AddInvoiceModal api={api} visible={addModalVisible} setHidden={setAddModalVisible}/>
         </Content>
       </Layout>
     </>

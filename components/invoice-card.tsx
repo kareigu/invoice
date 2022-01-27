@@ -10,7 +10,7 @@ interface IProps {
 
 const InvoiceCard: FC<IProps> = ({invoice}) => {
   return (
-    <Card title={invoice.name} style={{margin: '0.25rem'}}>
+    <Card title={invoice.name}>
       <ul>
         <li>
           <Text code>{ invoice.account }</Text>
