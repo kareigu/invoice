@@ -7,10 +7,10 @@ const { Text } = Typography;
 interface IProps {
   api: string,
   visible: boolean,
-  setHidden: Dispatch<SetStateAction<boolean>>,
+  setVisible: Dispatch<SetStateAction<boolean>>,
 }
 
-const AddInvoiceModal: FC<IProps> = ({api, visible, setHidden}) => {
+const AddInvoiceModal: FC<IProps> = ({api, visible, setVisible}) => {
   const [name, setName] = useState('');
   const [payee, setPayee] = useState('');
   const [account, setAccount] = useState('');
@@ -47,7 +47,7 @@ const AddInvoiceModal: FC<IProps> = ({api, visible, setHidden}) => {
           setStatusVisible(true);
           setStatusText('Added new invoice');
           setTimeout(() => {
-            setHidden(false);
+            setVisible(false);
             setStatusVisible(false);
           }, 2000);
         }
@@ -60,11 +60,16 @@ const AddInvoiceModal: FC<IProps> = ({api, visible, setHidden}) => {
     setLoading(false);
   }
 
+  const handleClose = () => {
+    setVisible(false);
+    setStatusVisible(false);
+  }
+
   return (
     <Modal 
       title="Add a new invoice" 
       visible={visible}
-      onCancel={() => setHidden(false)}
+      onCancel={handleClose}
       onOk={handleSubmit}
       confirmLoading={loading}
     >

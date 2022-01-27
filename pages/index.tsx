@@ -79,7 +79,7 @@ const Home: NextPage<IProps> = ({api}) => {
                 }
             </Row>
           </div>
-          <AddInvoiceModal api={api} visible={addModalVisible} setHidden={setAddModalVisible}/>
+          <AddInvoiceModal api={api} visible={addModalVisible} setVisible={setAddModalVisible}/>
         </Content>
       </Layout>
     </>
